@@ -6,13 +6,16 @@ Output staker information from PYE Swap staking pools into a CSV file.
 
 ## Requirements
 
-1. CovalentHQ API key to read the holder list for the slice tokens.
+1. Microsoft .NET 6.0 or above
+   * Download for your operating system from: https://dotnet.microsoft.com/en-us/download
+
+2. CovalentHQ API key to read the holder list for the slice tokens.
    * Get a free key at: [https://www.covalenthq.com/](https://www.covalenthq.com/)
 
-2. Build from source.
+3. Build from source.
    * See below.
 
-3. Staking and Slice contracts for the staking pool you wish to read information from.
+4. Staking and Slice contracts for the staking pool you wish to read information from.
 
 ---
 
@@ -20,7 +23,7 @@ Output staker information from PYE Swap staking pools into a CSV file.
 
 After building from the source you may run the app from a terminal as follows
 
-pyeswap-stakeinfo.exe [**ChainID**] [**Slice-Contract**] [**Staking-Contract**] [**CovalentHQ-API_Key**] [**Output-Filename**]
+pyeswap-stakeinfo.exe [**ChainID**] [**Slice-Contract**] [**Staking-Contract**] [**CovalentHQ-API-Key**] [**Output-Filename**]
 
 ### Example:
 
