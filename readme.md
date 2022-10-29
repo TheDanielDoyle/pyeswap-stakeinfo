@@ -25,7 +25,7 @@ pyeswap-stakeinfo.exe [**ChainID**] [**Slice-Contract**] [**Staking-Contract**] 
 ### Example:
 
 ```
-pyeswap-stakeinfo.exe 0xd1510af5614ac683906e0dfe63fa192d18c0ae3f 0x76cb562a83c71b8457c9705072201740a4463100 ckey_d0vhuy9d54plvt4eqxuwj390tds pyeswap-bsc-pye-to-apple-pool.csv
+pyeswap-stakeinfo.exe 56 0xd1510af5614ac683906e0dfe63fa192d18c0ae3f 0x76cb562a83c71b8457c9705072201740a4463100 ckey_d0vhuy9d54plvt4eqxuwj390tds pyeswap-bsc-pye-to-apple-pool.csv
 ```
 
 They API Key above is a dummy. You need your own!
