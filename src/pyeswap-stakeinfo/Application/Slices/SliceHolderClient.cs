@@ -9,12 +9,18 @@ using Newtonsoft.Json;
 
 namespace PYESwapStakeInfo.Application.Slices;
 
-internal static class SliceHolderClient
+internal class SliceHolderClient : ISliceHolderClient
 {
-    public static async Task<Result<IReadOnlyCollection<SliceHolder>>> ReadAsync(
+    private readonly IFlurlClient _client;
+
+    public SliceHolderClient(HttpClient client)
+    {
+        _client = new FlurlClient(client);
+    }
+
+    public async Task<Result<IReadOnlyCollection<SliceHolder>>> ReadAsync(
         int chainId, string sliceContract, string covalentApiKey)
     {
-
         Url url = new Url("https://api.covalenthq.com/v1/")
             .AppendPathSegment(chainId)
             .AppendPathSegment("tokens")
@@ -22,19 +28,18 @@ internal static class SliceHolderClient
             .AppendPathSegment("token_holders/")
             .SetQueryParam("key", covalentApiKey);
 
-
         bool hasMore;
         int pageNumber = 0;
         List<SliceHolder> sliceHolders = new();
 
         do
         {
-            IFlurlRequest httpRequest = new FlurlRequest(url)
+            IFlurlResponse response = await _client.Request(url)
+                .AllowAnyHttpStatus()
                 .SetQueryParam("page-size", 1000)
-                .SetQueryParam("page-number", pageNumber);
+                .SetQueryParam("page-number", pageNumber)
+                .GetAsync();
 
-
-            IFlurlResponse response = await httpRequest.AllowAnyHttpStatus().GetAsync();
             HttpResponseMessage message = response.ResponseMessage;
 
             if (!message.IsSuccessStatusCode)
@@ -49,6 +54,7 @@ internal static class SliceHolderClient
 
             hasMore = dto.HasMore;
             pageNumber += 1;
+
         } while (hasMore);
 
 

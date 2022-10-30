@@ -13,10 +13,12 @@ namespace PYESwapStakeInfo.Application.Stakers;
 
 internal sealed class StakingContractReader : IStakingContractReader
 {
+    private readonly IStakingHolderClient _client;
     private readonly ILogger _logger;
 
-    public StakingContractReader(ILogger<StakingContractReader> logger)
+    public StakingContractReader(IStakingHolderClient client, ILogger<StakingContractReader> logger)
     {
+        _client = client;
         _logger = logger;
     }
 
@@ -60,7 +62,7 @@ internal sealed class StakingContractReader : IStakingContractReader
         return policy.ExecuteAndCaptureAsync<Staker>(async () =>
         {
             Result<Staker> readStakingHolder =
-                await StakingHolderClient.ReadHolderAsync(chainId, stakingContract, sliceHolder);
+                await _client.ReadHolderAsync(chainId, stakingContract, sliceHolder);
             return readStakingHolder.Value;
         });
     }

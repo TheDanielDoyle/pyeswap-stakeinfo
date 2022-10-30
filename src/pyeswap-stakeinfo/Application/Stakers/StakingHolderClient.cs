@@ -1,20 +1,29 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentResults;
 using Nethereum.Contracts.ContractHandlers;
+using Nethereum.JsonRpc.Client;
 using Nethereum.Util;
 using Nethereum.Web3;
 using PYESwapStakeInfo.Application.Slices;
 
 namespace PYESwapStakeInfo.Application.Stakers;
 
-internal static class StakingHolderClient
+internal sealed class StakingHolderClient : IStakingHolderClient
 {
-    public static async Task<Result<Staker>> ReadHolderAsync(
+    private readonly HttpClient _client;
+
+    public StakingHolderClient(HttpClient client)
+    {
+        _client = client;
+    }
+
+    public async Task<Result<Staker>> ReadHolderAsync(
         int chainId, string stakingContract, SliceHolder sliceHolder)
     {
-        string rpcAddress = Chain.ToRpc(chainId).ToString();
-        Web3 web3 = new(rpcAddress);
+        RpcClient rpcClient = new(Chain.ToRpc(chainId), _client);
+        Web3 web3 = new(rpcClient);
         ContractHandler contract = web3.Eth.GetContractHandler(stakingContract);
 
         UserInfoFunction function = new()

@@ -9,13 +9,23 @@ internal static class AppBuilder
 {
     public static IApp Build(Options options)
     {
-        return new ServiceCollection()
-            .AddLogging(o => o.AddConsole())
+        ServiceCollection services = new();
+
+        services
+            .AddHttpClient<ISliceHolderClient, SliceHolderClient>();
+
+        services
+            .AddHttpClient<IStakingHolderClient, StakingHolderClient>();
+
+        services
+            .AddLogging(logging => logging.AddConsole())
             .AddSingleton<IApp, App>()
             .AddSingleton<ISliceHolderReader, SliceHolderReader>()
             .AddSingleton<IStakingContractReader, StakingContractReader>()
             .AddSingleton<IStakingHolderCsvWriter, StakingHolderCsvWriter>()
-            .AddSingleton<Options>(options)
+            .AddSingleton<Options>(options);
+
+        return services
             .BuildServiceProvider()
             .GetRequiredService<IApp>();
     }
