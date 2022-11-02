@@ -35,7 +35,9 @@ internal sealed class App : IApp
         try
         {
             Result<IReadOnlyCollection<SliceHolder>> readSliceHolders
-                = await _sliceReader.ReadAsync(_options.ChainId, _options.SliceContract, _options.CovalentApiKey);
+                = await _sliceReader
+                    .ReadAsync(_options.ChainId, _options.SliceContract, _options.CovalentApiKey)
+                    .ConfigureAwait(false);
                         
             if (readSliceHolders.IsFailed)
             {
@@ -44,7 +46,9 @@ internal sealed class App : IApp
             }
                         
             Result<IReadOnlyCollection<Staker>> readStakingHolders 
-                = await _stakingReader.ReadHoldersAsync(_options.ChainId, _options.StakingContract, readSliceHolders.Value);
+                = await _stakingReader
+                    .ReadHoldersAsync(_options.ChainId, _options.StakingContract, readSliceHolders.Value)
+                    .ConfigureAwait(false);
                         
             if (readStakingHolders.IsFailed)
             {

@@ -38,7 +38,8 @@ internal class SliceHolderClient : ISliceHolderClient
                 .AllowAnyHttpStatus()
                 .SetQueryParam("page-size", 1000)
                 .SetQueryParam("page-number", pageNumber)
-                .GetAsync();
+                .GetAsync()
+                .ConfigureAwait(false);
 
             HttpResponseMessage message = response.ResponseMessage;
 
@@ -47,10 +48,12 @@ internal class SliceHolderClient : ISliceHolderClient
                 return Result.Fail("Unable to read staking holders");
             }
             
-            string content = await message.Content.ReadAsStringAsync();
+            string content = await message.Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(false);
 
             SliceHoldersDto dto = JsonConvert.DeserializeObject<SliceHoldersDto>(content);
-            sliceHolders.AddRange(dto.Data.Holders.Select(h => new SliceHolder(h.Address)));
+            sliceHolders.AddRange(dto.Data.Holders.Select(holder => new SliceHolder(holder.Address)));
 
             hasMore = dto.HasMore;
             pageNumber += 1;

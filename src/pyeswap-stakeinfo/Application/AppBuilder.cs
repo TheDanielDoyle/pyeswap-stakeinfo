@@ -1,7 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PYESwapStakeInfo.Application.Slices;
 using PYESwapStakeInfo.Application.Stakers;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Retry;
 
 namespace PYESwapStakeInfo.Application;
 
@@ -11,11 +16,17 @@ internal static class AppBuilder
     {
         ServiceCollection services = new();
 
-        services
-            .AddHttpClient<ISliceHolderClient, SliceHolderClient>();
+        AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
         services
-            .AddHttpClient<IStakingHolderClient, StakingHolderClient>();
+            .AddHttpClient<ISliceHolderClient, SliceHolderClient>()
+            .AddPolicyHandler(retryPolicy);
+
+        services
+            .AddHttpClient<IStakingHolderClient, StakingHolderClient>()
+            .AddPolicyHandler(retryPolicy);
 
         services
             .AddLogging(logging => logging.AddConsole())
