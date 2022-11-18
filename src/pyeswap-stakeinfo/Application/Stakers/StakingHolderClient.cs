@@ -4,7 +4,6 @@ using FluentResults;
 using Microsoft.Extensions.Logging;
 using Nethereum.Contracts.ContractHandlers;
 using Nethereum.JsonRpc.Client;
-using Nethereum.Util;
 using Nethereum.Web3;
 using PYESwapStakeInfo.Application.Slices;
 
@@ -37,11 +36,9 @@ internal sealed class StakingHolderClient : IStakingHolderClient
             .QueryAsync<UserInfoFunction, UserInfoFunctionOutput>(function)
             .ConfigureAwait(false);
 
-        decimal amount = Web3.Convert.FromWei(result.Amount, UnitConversion.EthUnit.Gwei);
-
         _logger.LogInformation("Holder {Holder} on chain {ChainId} in staking contract {StakingContract} holds {Amount} tokens", 
-            sliceHolder.Address, chainId, stakingContract, amount);
+            sliceHolder.Address, chainId, stakingContract, result.Amount);
 
-        return Result.Ok(new Staker(sliceHolder.Address, stakingContract, amount));
+        return Result.Ok(new Staker(sliceHolder.Address, stakingContract, result.Amount));
     }
 }

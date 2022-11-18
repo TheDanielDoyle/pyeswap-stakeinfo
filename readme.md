@@ -35,6 +35,16 @@ They API Key above is a dummy. You need your own!
 
 ---
 
+## Reading the numbers
+
+The numbers come in BitIntger, therefore you are required to convert them to the decimal value you wish.
+
+For example, Apple, which has 18 decimal places, you can run the following formula in Excel/Sheets to get the decimal value.
+
+* =**CELL**/1E+18
+
+Replace **CELL** with the cell reference. The example is essentially dividing the **CELL** by 18 zeros, or 000,000,000,000,000,000 to get the true value.
+
 ## Build from source
 
 Run the following in the command line.
