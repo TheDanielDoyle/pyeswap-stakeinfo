@@ -6,7 +6,7 @@ Output staker information from PYE Swap staking pools into a CSV file.
 
 ## Requirements
 
-1. Microsoft .NET 6.0 or above
+1. Microsoft .NET 7.0 or above
    * Download for your operating system from: https://dotnet.microsoft.com/en-us/download
 
 2. CovalentHQ API key to read the holder list for the slice tokens.
