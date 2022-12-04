@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Numerics;
 using System.Threading.Tasks;
 using FluentResults;
 using Microsoft.Extensions.Logging;
@@ -27,18 +28,27 @@ internal sealed class StakingHolderClient : IStakingHolderClient
         Web3 web3 = new(rpcClient);
         ContractHandler contract = web3.Eth.GetContractHandler(stakingContract);
 
-        UserInfoFunction function = new()
+        UserInfoFunction userinfoFunction = new()
         {
             Address = sliceHolder.Address
         };
 
-        UserInfoFunctionOutput result = await contract
-            .QueryAsync<UserInfoFunction, UserInfoFunctionOutput>(function)
+        UserInfoFunctionOutput userInfo = await contract
+            .QueryAsync<UserInfoFunction, UserInfoFunctionOutput>(userinfoFunction)
             .ConfigureAwait(false);
 
         _logger.LogInformation("Holder {Holder} on chain {ChainId} in staking contract {StakingContract} holds {Amount} tokens", 
-            sliceHolder.Address, chainId, stakingContract, result.Amount);
+            sliceHolder.Address, chainId, stakingContract, userInfo.Amount);
 
-        return Result.Ok(new Staker(sliceHolder.Address, stakingContract, result.Amount));
+        PendingRewardFunction pendingRewardFunction = new()
+        {
+            Address = sliceHolder.Address
+        };
+        
+        PendingRewardFunctionOutput pendingReward = await contract
+            .QueryAsync<PendingRewardFunction, PendingRewardFunctionOutput>(pendingRewardFunction)
+            .ConfigureAwait(false);
+
+        return Result.Ok(new Staker(sliceHolder.Address, stakingContract, userInfo.Amount, pendingReward.Amount));
     }
 }

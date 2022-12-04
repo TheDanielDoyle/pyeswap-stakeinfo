@@ -2,7 +2,7 @@
 
 namespace PYESwapStakeInfo;
 
-internal sealed record Options
+public class Options
 {
     [Value(index: 0, Required = true, HelpText = "Chain Id.")]
     public int ChainId { get; set; }

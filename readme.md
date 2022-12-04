@@ -50,7 +50,7 @@ Replace **CELL** with the cell reference. The example is essentially dividing th
 Run the following in the command line.
 
 ```
-dotnet publish --runtime win-x64 --configuration Release --framework net6.0 --self-contained true -p:"PublishReadyToRun=true;PublishSingleFile=true;PublishTrimmed=true"
+dotnet publish --runtime win-x64 --configuration Release --framework net7.0 --self-contained true -p:"PublishReadyToRun=true;PublishSingleFile=true;PublishTrimmed=false"
 ```
 
 Replace the **--runtime** value to match your operating system.

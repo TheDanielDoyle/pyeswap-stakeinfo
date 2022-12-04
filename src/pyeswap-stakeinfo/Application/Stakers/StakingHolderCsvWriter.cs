@@ -25,7 +25,7 @@ internal sealed class StakingHolderCsvWriter : IStakingHolderCsvWriter
             await using StreamWriter writer = new(fileStream);
             await using CsvWriter csv = new(writer, configuration);
             await csv
-                .WriteRecordsAsync(stakingHolders.OrderByDescending(e => e.Amount))
+                .WriteRecordsAsync(stakingHolders.OrderByDescending(e => e.AmountInWei))
                 .ConfigureAwait(false);
 
             return Result.Ok();
